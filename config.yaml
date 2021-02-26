@@ -1,0 +1,20 @@
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2, 
+# strandedness). Units are technical replicates (e.g. lanes, or resequencing of the 
+# same biological sample).If the column "strandedness" is present (which is optional), 
+# can be empty or has one of these values: none, yes or reverse. none is for unstranded 
+# protocols, yes an reverse follow the nomenclature used in `htseq-count --reverse` 
+# which is referenced in STAR manual section 7, "Counting number of reads per gene".
+
+units: units.tsv
+
+ref:
+  # the star index location or genomefa to index
+  index: "gr38_star_index"
+  genomefa: "/data/projects/common_references/raw/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+  # gtf file with transcripts
+  annotation: "/data/projects/common_references/raw/Homo_sapiens.GRCh38.102.gtf"
+  annotationrseqc: "/data/projects/common_references/raw/Homo_sapiens.GRCh38.102.gtf"
+  adapter: "/data/projects/common_references/raw/CustomBlacklist.fa"
+
+params:
+  star: ""
