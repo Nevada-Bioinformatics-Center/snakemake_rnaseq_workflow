@@ -29,9 +29,10 @@ rule star_index:
     output:
         directory(config["ref"]["index"])
     threads:
-        4
+        12
     params:
-        extra = ""
+        #needed to change params below to build xenopus index
+        extra = "--limitGenomeGenerateRAM 60550893493 --genomeSAsparseD 3 --genomeSAindexNbases 12 -- genomeChrBinNbits 14"
     log:
         "logs/star_index_genome.log"
     wrapper:
@@ -41,7 +42,8 @@ rule star_index:
 rule align:
     input:
         fq1=get_trim_fastq1,
-        fq2=get_trim_fastq2
+        fq2=get_trim_fastq2,
+        genomedir=directory(config["ref"]["index"])
     output:
         # see STAR manual for additional output files
         "star/{sample}-{unit}/Aligned.sortedByCoord.out.bam",
