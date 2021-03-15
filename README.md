@@ -18,10 +18,16 @@ This workflow performs trimming with trimmomatic sliding window, runs alignment 
 
 clone this workflow to your local computer
 
-
 #### Step 2: Configure workflow
 
 Configure the workflow according to your needs via editing the file `config.yaml` and units.tsv.
+
+To help fill out the units.tsv, you can use MS Excel to create the 4 columns sample,units,fq1,fq2
+
+Then in the directory where you have your fastq files, run the following command to get the full path to the files. This can be easily copy/pasted into the correct column.
+`ls -d1 $PWD/*R1.fastq.gz`
+
+Likewise, once the worksheet is filled out, copy the table and paste it into an empty units.tsv file.
 
 #### Step 3: Execute workflow
 
