@@ -41,7 +41,7 @@ rule featurecounts_onefile:
     params:
         tmp_dir="",   # implicitly sets the --tmpDir flag
         r_path="",    # implicitly sets the --Rpath flag
-        extra="-p -C -t exon -g gene_id --extraAttributes gene_name,gene_biotype"   #-p to count fragments instead of reads, -C to not count fragments if mapped to different chrs, -t exon (only consider exons, -g look at the gene_id field to get the feature name
+        extra="-p -C -t exon -g gene_id --extraAttributes gene_name,transcript_id,transcript_name"   #-p to count fragments instead of reads, -C to not count fragments if mapped to different chrs, -t exon (only consider exons, -g look at the gene_id field to get the feature name
     threads: 8
     wrapper:
         "0.69.0/bio/subread/featurecounts"
