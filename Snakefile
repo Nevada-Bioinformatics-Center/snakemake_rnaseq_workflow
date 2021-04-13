@@ -32,7 +32,7 @@ rule all:
         #expand("results/{unit.sample}-{unit.unit}.featureCounts", unit=units.itertuples())
         "qc/multiqc_report_all.html",
         "results/featureCounts/all.featureCounts",
-        expand("stats/{unit.sample}-{unit.unit}.isize.txt", unit=units.itertuples())
+        #expand("stats/{unit.sample}-{unit.unit}.isize.txt", unit=units.itertuples())
 
 ##### setup report #####
 

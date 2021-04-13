@@ -9,11 +9,11 @@ units: units.tsv
 
 ref:
   # the star index location or genomefa to index
-  index: "xenla9.2_star_index"
-  genomefa: "/data/projects/common_references/raw/XENLA_9.2_genome.fa"
+  index: "astymex2.0_star_index"
+  genomefa: "/data/projects/common_references/raw/Astyanax_mexicanus.Astyanax_mexicanus-2.0.dna.toplevel.fa"
   # gtf file with transcripts
-  annotation: "/data/projects/common_references/raw/XENLA_9.2_Xenbase.gtf"
-  annotationrseqc: "/data/projects/common_references/raw/XENLA_9.2_Xenbase.gtf"
+  annotation: "/data/projects/common_references/raw/Astyanax_mexicanus.Astyanax_mexicanus-2.0.103.gtf"
+  annotationrseqc: "/data/projects/common_references/raw/Astyanax_mexicanus.Astyanax_mexicanus-2.0.103.gtf"
   adapter: "/data/projects/common_references/raw/CustomBlacklist.fa"
 
 params:

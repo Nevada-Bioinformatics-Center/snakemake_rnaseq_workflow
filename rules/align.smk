@@ -32,7 +32,8 @@ rule star_index:
         12
     params:
         #needed to change params below to build xenopus index
-        extra = "--limitGenomeGenerateRAM 60550893493 --genomeSAsparseD 3 --genomeSAindexNbases 12 -- genomeChrBinNbits 14"
+        #extra = "--limitGenomeGenerateRAM 60550893493 --genomeSAsparseD 3 --genomeSAindexNbases 12 -- genomeChrBinNbits 14"
+        extra = ""
     log:
         "logs/star_index_genome.log"
     wrapper:
@@ -64,7 +65,7 @@ rule symlink_bam:
     input:
         "star/{sample}-{unit}/Aligned.sortedByCoord.out.bam" 
     output:
-        "star/{sample}-{unit}/{sample}-{unit}_Aligned.sortedByCoord.out.bam" 
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam" 
     threads: 1
     shell:
         """
