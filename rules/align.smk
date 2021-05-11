@@ -28,12 +28,12 @@ rule star_index:
         gtf = config["ref"]["annotation"]
     output:
         directory(config["ref"]["index"])
-    threads:
-        12
     params:
         #needed to change params below to build xenopus index
         #extra = "--limitGenomeGenerateRAM 60550893493 --genomeSAsparseD 3 --genomeSAindexNbases 12 -- genomeChrBinNbits 14"
         extra = ""
+    threads: 16
+    resources: time_min=820, mem_mb=40000, cpus=16
     log:
         "logs/star_index_genome.log"
     wrapper:
@@ -58,6 +58,7 @@ rule align:
         extra="--outSAMtype BAM SortedByCoordinate --outReadsUnmapped Fastx --quantMode GeneCounts --sjdbGTFfile {} {}".format(
               config["ref"]["annotation"], config["params"]["star"])
     threads: 16
+    resources: time_min=820, mem_mb=200000, cpus=16
     wrapper:
         "0.71.1/bio/star/align"
 
@@ -71,6 +72,19 @@ rule symlink_bam:
         """
         ln -s Aligned.sortedByCoord.out.bam {output}
         """
+
+rule samtools_index:
+    input:
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam" 
+    output:
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai" 
+    params:
+        "" # optional params string
+    resources: time_min=320, mem_mb=2000, cpus=1
+    wrapper:
+        "0.73.0/bio/samtools/index"
+
+
 
 #rule mark_duplicates:
 #    input:

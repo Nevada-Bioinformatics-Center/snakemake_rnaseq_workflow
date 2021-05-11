@@ -14,12 +14,13 @@ def get_fastq2(wildcards):
 
 rule rseqc_gtf2bed:
     input:
-        config["ref"]["annotationrseqc"],
+        config["ref"]["annotation"],
     output:
         bed="qc/rseqc/annotation.bed",
         db=temp("qc/rseqc/annotation.db"),
     log:
         "logs/rseqc_gtf2bed.log",
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/gffutils.yaml"
     script:
@@ -29,6 +30,7 @@ rule rseqc_gtf2bed:
 rule rseqc_junction_annotation:
     input:
         bam="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        bai="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
         bed="qc/rseqc/annotation.bed",
     output:
         "qc/rseqc/{sample}-{unit}.junctionanno.junction.bed",
@@ -38,6 +40,7 @@ rule rseqc_junction_annotation:
     params:
         extra=r"-q 255",  # STAR uses 255 as a score for unique mappers
         prefix=lambda w, output: strip_suffix(output[0], ".junction.bed"),
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -48,6 +51,7 @@ rule rseqc_junction_annotation:
 rule rseqc_junction_saturation:
     input:
         bam="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        bai="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
         bed="qc/rseqc/annotation.bed",
     output:
         "qc/rseqc/{sample}-{unit}.junctionsat.junctionSaturation_plot.pdf",
@@ -59,6 +63,7 @@ rule rseqc_junction_saturation:
         prefix=lambda w, output: strip_suffix(
             output[0], ".junctionSaturation_plot.pdf"
         ),
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -69,6 +74,7 @@ rule rseqc_junction_saturation:
 rule rseqc_stat:
     input:
         "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
     output:
         "qc/rseqc/{sample}-{unit}.stats.txt",
     priority: 1
@@ -76,6 +82,7 @@ rule rseqc_stat:
         "logs/rseqc/rseqc_stat/{sample}-{unit}.log",
     conda:
         "../envs/rseqc.yaml"
+    resources: time_min=320, mem_mb=8000, cpus=1
     shell:
         "bam_stat.py -i {input} > {output} 2> {log}"
 
@@ -83,12 +90,14 @@ rule rseqc_stat:
 rule rseqc_infer:
     input:
         bam="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        bai="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
         bed="qc/rseqc/annotation.bed",
     output:
         "qc/rseqc/{sample}-{unit}.infer_experiment.txt",
     priority: 1
     log:
         "logs/rseqc/rseqc_infer/{sample}-{unit}.log",
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -98,12 +107,14 @@ rule rseqc_infer:
 rule rseqc_innerdis:
     input:
         bam="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        bai="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
         bed="qc/rseqc/annotation.bed",
     output:
         "qc/rseqc/{sample}-{unit}.inner_distance_freq.inner_distance.txt",
     priority: 1
     log:
         "logs/rseqc/rseqc_innerdis/{sample}-{unit}.log",
+    resources: time_min=320, mem_mb=8000, cpus=1
     params:
         prefix=lambda w, output: strip_suffix(output[0], ".inner_distance.txt"),
     conda:
@@ -115,12 +126,14 @@ rule rseqc_innerdis:
 rule rseqc_readdis:
     input:
         bam="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        bai="star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
         bed="qc/rseqc/annotation.bed",
     output:
         "qc/rseqc/{sample}-{unit}.readdistribution.txt",
     priority: 1
     log:
         "logs/rseqc/rseqc_readdis/{sample}-{unit}.log",
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -130,6 +143,7 @@ rule rseqc_readdis:
 rule rseqc_readdup:
     input:
         "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
     output:
         "qc/rseqc/{sample}-{unit}.readdup.DupRate_plot.pdf",
     priority: 1
@@ -137,6 +151,7 @@ rule rseqc_readdup:
         "logs/rseqc/rseqc_readdup/{sample}-{unit}.log",
     params:
         prefix=lambda w, output: strip_suffix(output[0], ".DupRate_plot.pdf"),
+    resources: time_min=320, mem_mb=8000, cpus=1
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -146,11 +161,13 @@ rule rseqc_readdup:
 rule rseqc_readgc:
     input:
         "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam",
+        "star/{sample}-{unit}/{sample}.{unit}_Aligned.sortedByCoord.out.bam.bai",
     output:
         "qc/rseqc/{sample}-{unit}.readgc.GC_plot.pdf",
     priority: 1
     log:
         "logs/rseqc/rseqc_readgc/{sample}-{unit}.log",
+    resources: time_min=320, mem_mb=8000, cpus=1
     params:
         prefix=lambda w, output: strip_suffix(output[0], ".GC_plot.pdf"),
     conda:
@@ -167,6 +184,7 @@ rule fastqc_pretrim_r1:
     params: ""
     log:
         "logs/fastqc_pretrim/{sample}-{unit}_r1.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     threads: 1
     wrapper:
         "v0.69.0/bio/fastqc"
@@ -180,6 +198,7 @@ rule fastqc_pretrim_r2:
     params: ""
     log:
         "logs/fastqc_pretrim/{sample}-{unit}_r2.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     threads: 1
     wrapper:
         "v0.69.0/bio/fastqc"
@@ -193,6 +212,7 @@ rule fastqc_posttrim_r1:
     params: ""
     log:
         "logs/fastqc_posttrim/{sample}-{unit}_r1.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     threads: 1
     wrapper:
         "v0.69.0/bio/fastqc"
@@ -206,6 +226,7 @@ rule fastqc_posttrim_r2:
     params: ""
     log:
         "logs/fastqc_posttrim/{sample}-{unit}_r2.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     threads: 1
     wrapper:
         "v0.69.0/bio/fastqc"
@@ -218,6 +239,7 @@ rule multiqc_pre:
         "qc/multiqc_report_pretrim.html"
     log:
         "logs/multiqc_pre.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     wrapper:
         "0.62.0/bio/multiqc"
 
@@ -231,6 +253,7 @@ rule multiqc_post:
         "qc/multiqc_report_posttrim.html"
     log:
         "logs/multiqc_post.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     wrapper:
         "0.62.0/bio/multiqc"
 
@@ -257,5 +280,6 @@ rule multiqc:
         "qc/multiqc_report_all.html"
     log:
         "logs/multiqc.log"
+    resources: time_min=320, mem_mb=8000, cpus=1
     wrapper:
         "0.62.0/bio/multiqc"
